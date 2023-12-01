@@ -18,8 +18,8 @@ public abstract class Executor<T> {
     public void execute(int day) {
         var input = readInputData("/day" + day + "/input.txt");
 
-        logger.info("Day {} - Part 1: {}", day, solvePart1(input));
-        logger.info("Day {} - Part 2: {}", day, solvePart2(input));
+        System.out.println("Day " + day + " - Part 1: " + solvePart1(input));
+        System.out.println("Day " + day + " - Part 2: " + solvePart2(input));
     }
 
     /**

@@ -10,7 +10,7 @@ class Day1Test extends Specification {
         when:
             def result = day1.solvePart1(assignment)
         then:
-            result == 0
+            result == 142
     }
 
     def "Solve Part 2"() {
@@ -20,6 +20,6 @@ class Day1Test extends Specification {
         when:
             def result = day1.solvePart2(assignment)
         then:
-            result == 0
+            result == 281
     }
 }
