@@ -44,31 +44,38 @@ public class Day1 extends Executor<Integer> {
                 "eight", "8",
                 "nine", "9");
 
-        var firstNumber = Optional.empty();
+        var firstNumber = Optional.<String>empty();
         var lastNumber = "";
-        var parsedLine = "";
-        for (Character c : line.toCharArray()) {
+
+        var parsing = line;
+        while (!parsing.isEmpty()) {
+            var c = parsing.charAt(0);
+
             if (Character.isDigit(c)) {
                 if (firstNumber.isEmpty()) {
-                    firstNumber = Optional.of(c);
+                    firstNumber = Optional.of(Character.toString(c));
                 } else {
-                    lastNumber = c.toString();
+                    lastNumber = Character.toString(c);
                 }
             } else {
-                parsedLine += c.toString();
-
+                var maxWord = parsing.substring(0, Math.min(5, parsing.length()));
                 for (var entry : map.entrySet()) {
-                    if (parsedLine.contains(entry.getKey())) {
-                        parsedLine = "";
-
+                    if (maxWord.startsWith(entry.getKey())) {
                         if (firstNumber.isEmpty()) {
                             firstNumber = Optional.of(entry.getValue());
                         } else {
                             lastNumber = entry.getValue();
                         }
+                        break;
                     }
                 }
             }
+
+            parsing = parsing.substring(1);
+        }
+
+        if (lastNumber.isBlank()) {
+            lastNumber = firstNumber.get();
         }
 
         return firstNumber.get() + lastNumber;
