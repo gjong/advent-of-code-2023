@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 public abstract class Executor<T> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
     /**
      * Executes the solution for the given day.
@@ -18,8 +18,15 @@ public abstract class Executor<T> {
     public void execute(int day) {
         var input = readInputData("/day" + day + "/input.txt");
 
-        System.out.println("Day " + day + " - Part 1: " + solvePart1(input));
-        System.out.println("Day " + day + " - Part 2: " + solvePart2(input));
+        var start = System.currentTimeMillis();
+        var part1 = solvePart1(input);
+        var end = System.currentTimeMillis();
+        logger.info("Part 1: {} ({}ms)", part1, end - start);
+
+        start = System.currentTimeMillis();
+        var part2 = solvePart2(input);
+        end = System.currentTimeMillis();
+        logger.info("Part 2: {} ({}ms)", part2, end - start);
     }
 
     /**

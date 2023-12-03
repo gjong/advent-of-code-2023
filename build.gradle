@@ -23,10 +23,9 @@ java {
 }
 
 dependencies {
-    implementation platform("org.apache.logging.log4j:log4j-bom:2.20.0")
-    runtimeOnly("org.apache.logging.log4j:log4j-core")
-    runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl")
+    implementation 'ch.qos.logback:logback-core:1.2.9'
+    implementation 'ch.qos.logback:logback-classic:1.2.9'
+    implementation 'org.slf4j:slf4j-api:1.7.32'
 
-    implementation("org.apache.logging.log4j:log4j-api")
     implementation 'com.jongsoft.lang:language:1.1.6'
 }
