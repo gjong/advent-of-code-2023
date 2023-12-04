@@ -18,7 +18,7 @@ class Day4 extends Executor<Long> {
         }
     }
 
-    class CountedCards {
+    static class CountedCards {
         private final Card card;
         private int count;
 
@@ -59,12 +59,10 @@ class Day4 extends Executor<Long> {
         for (var i = 0; i < cardInput.size(); i++) {
             var card = cardInput.get(i);
             if (card.card.numberMatches() > 0) {
-                var max = (int) Math.min(i + card.card.numberMatches() + 1, cardInput.size());
                 // increment the cards below this one, keeping in mind the out of bounds
+                var max = (int) Math.min(i + card.card.numberMatches() + 1, cardInput.size());
                 IntStream.range(i + 1, max)
-                        .forEach(index -> {
-                            cardInput.get(index).increment(card.count);
-                        });
+                        .forEach(index -> cardInput.get(index).increment(card.count));
             }
         }
 
