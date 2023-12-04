@@ -8,12 +8,27 @@ class Day4 extends Executor<Long> {
 
     record Card(int hand, List<Integer> winningNumbers, List<Integer> yourNumbers) {
         public long score() {
-            var nrCardsMatch = yourNumbers.stream()
-                    .filter(winningNumbers::contains)
-                    .mapToLong(winningNumbers::indexOf)
-                    .count();
+            return (long) Math.pow(2, numberMatches() - 1);
+        }
 
-            return (long) Math.pow(2, nrCardsMatch - 1);
+        public long numberMatches() {
+            return yourNumbers.stream()
+                    .filter(winningNumbers::contains)
+                    .count();
+        }
+    }
+
+    class CountedCards {
+        private final Card card;
+        private int count;
+
+        public CountedCards(Card card) {
+            this.card = card;
+            this.count = 1;
+        }
+
+        public void increment(int amount) {
+            this.count += amount;
         }
     }
 
@@ -31,8 +46,31 @@ class Day4 extends Executor<Long> {
                 .sum();
     }
 
+    /**
+     * Specifically, you win copies of the scratchcards below the winning card equal to the number of matches.
+     * So, if card 10 were to have 5 matching numbers, you would win one copy each of cards 11, 12, 13, 14, and 15.
+     */
     public Long solvePart2(String input) {
-        return 0L;
+        var cardInput = input.lines()
+                .map(this::parseCard)
+                .map(CountedCards::new)
+                .toList();
+
+        for (var i = 0; i < cardInput.size(); i++) {
+            var card = cardInput.get(i);
+            if (card.card.numberMatches() > 0) {
+                var max = (int) Math.min(i + card.card.numberMatches() + 1, cardInput.size());
+                // increment the cards below this one, keeping in mind the out of bounds
+                IntStream.range(i + 1, max)
+                        .forEach(index -> {
+                            cardInput.get(index).increment(card.count);
+                        });
+            }
+        }
+
+        return cardInput.stream()
+                .mapToLong(card -> card.count)
+                .sum();
     }
 
     public static void main(String[] args) {
