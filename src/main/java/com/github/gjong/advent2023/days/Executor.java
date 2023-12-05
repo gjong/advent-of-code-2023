@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 public abstract class Executor<T> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
+    protected final Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
     /**
      * Executes the solution for the given day.
