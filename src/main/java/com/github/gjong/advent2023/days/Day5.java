@@ -142,10 +142,10 @@ public class Day5 extends Executor<Long> {
 
         for (var mutation : mutations) {
             if (mutation.within(seed)) {
-                logger.info("Seed {} within with mutation {}", seed, mutation);
+                logger.debug("Seed {} within with mutation {}", seed, mutation);
                 return List.of(mutation.mutate(seed));
             } else if (mutation.overlap(seed)) {
-                logger.info("Seed {} overlaps with mutation {}", seed, mutation);
+                logger.debug("Seed {} overlaps with mutation {}", seed, mutation);
 
                 List<Seed> splitSeeds = new ArrayList<>();
                 if (seed.seed() < mutation.start()) {
@@ -156,7 +156,7 @@ public class Day5 extends Executor<Long> {
                     splitSeeds.add(seed.after(mutation.last()));
                 }
 
-                logger.info("Split seeds: {}", splitSeeds);
+                logger.debug("Split seeds: {}", splitSeeds);
                 return mutate(splitSeeds, mutations);
             }
         }

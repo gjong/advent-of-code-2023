@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-class Day4 extends Executor<Long> {
+public class Day4 extends Executor<Long> {
 
     record Card(int hand, List<Integer> winningNumbers, List<Integer> yourNumbers) {
         public long score() {
