@@ -56,20 +56,10 @@ public class Day6 extends Executor<Long> {
     }
 
     private int computeWaysToWin(long time, long distance) {
-        var numberOfWaysToWin = 0;
-        var computedDistance = distance + 1;
-        for (var pressTime = (long) Math.ceil(time / 2.0); computedDistance > distance; pressTime++) {
-            computedDistance = pressTime * (time - pressTime);
-            if (computedDistance > distance) {
-                numberOfWaysToWin++;
-            }
-        }
-
-        if (time % 2 == 0) {
-            return numberOfWaysToWin * 2 - 1;
-        }
-
-        return numberOfWaysToWin * 2;
+        var d = Math.sqrt(time * time - 4.0 * distance);
+        var min = Math.floor(.5 * (time - d)) + 1;
+        var max = Math.ceil(.5 * (time + d)) - 1;
+        return (int) (max - min + 1);
     }
 
     private List<Integer[]> parseInput(String input) {

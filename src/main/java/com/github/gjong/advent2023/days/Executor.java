@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.function.Supplier;
 
 public abstract class Executor<T> {
 
@@ -18,15 +21,18 @@ public abstract class Executor<T> {
     public void execute(int day) {
         var input = readInputData("/day" + day + "/input.txt");
 
-        var start = System.currentTimeMillis();
-        var part1 = solvePart1(input);
-        var end = System.currentTimeMillis();
-        logger.info("Part 1: {} ({}ms)", part1, end - start);
+        execute(1, () -> solvePart1(input));
+        execute(2, () -> solvePart2(input));
+    }
 
-        start = System.currentTimeMillis();
-        var part2 = solvePart2(input);
-        end = System.currentTimeMillis();
-        logger.info("Part 2: {} ({}ms)", part2, end - start);
+    private void execute(int part, Supplier<T> runnable) {
+        var start = Instant.now();
+        var result = runnable.get();
+        var end = Instant.now();
+        logger.info("Part {}: {} ({}ms)",
+                part,
+                result,
+                Duration.between(start, end).toMillis());
     }
 
     /**
