@@ -170,27 +170,47 @@ public class Day7 extends Executor<Long> {
         var nrJokers = hand.length() - handWithoutJokers.length();
 
         if (nrJokers > 0) {
-            handScore = switch (handScore) {
-                case 6 -> HandResult.FIVE_OF_A_KIND.score;      // four of a kind with joker
-                case 5 -> throw new IllegalStateException("Should not happen");
-                case 4 -> 4 + 1 + nrJokers;                     // three of a kind with joker
-                case 3 -> HandResult.FULL_HOUSE.score;          // two pair with joker
-                case 2 -> nrJokers == 1
-                        ? HandResult.THREE_OF_A_KIND.score
-                        : nrJokers == 2
-                            ? HandResult.FOUR_OF_A_KIND.score
-                            : HandResult.FIVE_OF_A_KIND.score;
-                case 1 -> nrJokers == 1
-                        ? HandResult.ONE_PAIR.score
-                        : nrJokers == 2
-                            ? HandResult.TWO_PAIR.score
-                            : nrJokers == 3
-                                ? HandResult.THREE_OF_A_KIND.score
-                                : nrJokers == 4
-                                    ? HandResult.FOUR_OF_A_KIND.score
-                                    : HandResult.FIVE_OF_A_KIND.score;
-                default -> throw new IllegalStateException("Should not happen");
-            };
+            if (handScore == HandResult.FOUR_OF_A_KIND.score) {
+                return HandResult.FIVE_OF_A_KIND.score;
+            }
+
+            if (handScore == HandResult.THREE_OF_A_KIND.score) {
+                return HandResult.FULL_HOUSE.score + nrJokers;
+            }
+
+            if (handScore == HandResult.TWO_PAIR.score) {
+                return HandResult.FULL_HOUSE.score;
+            }
+
+            if (handScore == HandResult.ONE_PAIR.score) {
+                // 2 cards are the same
+                if (nrJokers == 1) {
+                    return HandResult.THREE_OF_A_KIND.score;
+                }
+                if (nrJokers == 2) {
+                    return HandResult.FOUR_OF_A_KIND.score;
+                }
+                if (nrJokers == 3) {
+                    return HandResult.FIVE_OF_A_KIND.score;
+                }
+            }
+
+            if (handScore == HandResult.HIGH_CARD.score) {
+                if (nrJokers == 1) {
+                    return HandResult.ONE_PAIR.score;
+                }
+                if (nrJokers == 2) {
+                    return HandResult.THREE_OF_A_KIND.score;
+                }
+                if (nrJokers == 3) {
+                    return HandResult.FOUR_OF_A_KIND.score;
+                }
+                if (nrJokers == 4 || nrJokers == 5) {
+                    return HandResult.FIVE_OF_A_KIND.score;
+                }
+            }
+
+            throw new IllegalStateException("Unexpected hand score: " + handScore + " with jokers: " + nrJokers);
         }
 
         return handScore;
