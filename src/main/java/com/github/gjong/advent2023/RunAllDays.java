@@ -11,5 +11,6 @@ public class RunAllDays {
         new Day4().execute(4);
         new Day5().execute(5);
         new Day6().execute(6);
+        new Day7().execute(7);
     }
 }
