@@ -2,6 +2,8 @@ package com.github.gjong.advent2023.days;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -58,6 +60,7 @@ public class Day7 extends Executor<Long> {
                 case 'Q' -> 12;
                 case 'J' -> 11;
                 case 'T' -> 10;
+                case 'Z' -> 1;
                 default -> Integer.parseInt(String.valueOf(card));
             };
         }
@@ -95,10 +98,31 @@ public class Day7 extends Executor<Long> {
     @Override
     public Long solvePart1(String input) {
         var list = input.lines()
-                .map(this::readLine)
-                .collect(Collectors.groupingBy(
-                        m -> m.hand().score(), Collectors.toList()));
+                .map(line -> readLine(line, this::computeNormalHand))
+                .collect(Collectors.groupingBy(m -> m.hand().score(), Collectors.toList()));
 
+        return computeScore(list);
+    }
+
+    @Override
+    public Long solvePart2(String input) {
+        var list = input.lines()
+                .map(line -> readLine(line, this::computeJokerHand))
+                .map(move -> new Move(
+                        new Hand(
+                                move.hand.cards.replaceAll("J", "Z"),
+                                move.hand.score),
+                        move.bed()))
+                .collect(Collectors.groupingBy(m -> m.hand().score(), Collectors.toList()));
+
+        return computeScore(list);
+    }
+
+    public static void main(String[] args) {
+        new Day7().execute(7);
+    }
+
+    private long computeScore(Map<Integer, List<Move>> list) {
         var score = 0L;
         var rank = 1;
         for (var entry : list.entrySet()) {
@@ -116,23 +140,10 @@ public class Day7 extends Executor<Long> {
                 }
             }
         }
-
         return score;
     }
 
-    @Override
-    public Long solvePart2(String input) {
-        return solvePart1(input);
-    }
-
-    public static void main(String[] args) {
-        new Day7().execute(7);
-    }
-
-    private Move readLine(String line) {
-        var hand = line.substring(0, 5);
-        var bed = Integer.parseInt(line.substring(6));
-
+    private int computeNormalHand(String hand) {
         var groupedHand = Arrays.stream(hand.split(""))
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         var handScore = HandResult.HIGH_CARD;
@@ -150,7 +161,45 @@ public class Day7 extends Executor<Long> {
                 default -> handScore;
             };
         }
+        return handScore.score;
+    }
 
-        return new Move(new Hand(hand, handScore.score), bed);
+    private int computeJokerHand(String hand) {
+        var handWithoutJokers = hand.replaceAll("J", "");
+        var handScore = computeNormalHand(handWithoutJokers);
+        var nrJokers = hand.length() - handWithoutJokers.length();
+
+        if (nrJokers > 0) {
+            handScore = switch (handScore) {
+                case 6 -> HandResult.FIVE_OF_A_KIND.score;      // four of a kind with joker
+                case 5 -> throw new IllegalStateException("Should not happen");
+                case 4 -> 4 + 1 + nrJokers;                     // three of a kind with joker
+                case 3 -> HandResult.FULL_HOUSE.score;          // two pair with joker
+                case 2 -> nrJokers == 1
+                        ? HandResult.THREE_OF_A_KIND.score
+                        : nrJokers == 2
+                            ? HandResult.FOUR_OF_A_KIND.score
+                            : HandResult.FIVE_OF_A_KIND.score;
+                case 1 -> nrJokers == 1
+                        ? HandResult.ONE_PAIR.score
+                        : nrJokers == 2
+                            ? HandResult.TWO_PAIR.score
+                            : nrJokers == 3
+                                ? HandResult.THREE_OF_A_KIND.score
+                                : nrJokers == 4
+                                    ? HandResult.FOUR_OF_A_KIND.score
+                                    : HandResult.FIVE_OF_A_KIND.score;
+                default -> throw new IllegalStateException("Should not happen");
+            };
+        }
+
+        return handScore;
+    }
+
+    private Move readLine(String line, Function<String, Integer> handRanker) {
+        var hand = line.substring(0, 5);
+        var bed = Integer.parseInt(line.substring(6));
+
+        return new Move(new Hand(hand, handRanker.apply(hand)), bed);
     }
 }

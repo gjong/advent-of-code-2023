@@ -20,6 +20,6 @@ class Day7Test extends Specification {
         when:
             def result = day.solvePart2(assignment)
         then:
-            result == 71503
+            result == 5905
     }
 }
