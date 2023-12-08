@@ -1,5 +1,7 @@
 package com.github.gjong.advent2023.days;
 
+import com.github.gjong.advent2023.common.algo.Algo;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -15,6 +17,10 @@ import java.util.regex.Pattern;
  */
 public class Day8 extends Executor<Long> {
 
+    /**
+     * This record represents a possible move in the network.
+     * It contains the current position and the positions to the left and right.
+     */
     record PossibleMove(String position, String left, String right) {
     }
 
@@ -39,6 +45,10 @@ public class Day8 extends Executor<Long> {
         new Day8().execute(8);
     }
 
+    /**
+     * This method solves the problem.
+     * It processes the input to get the possible moves and then navigates the network.
+     */
     private long solve(String input, String start, String end) {
         var scanner = new Scanner(input);
 
@@ -48,29 +58,23 @@ public class Day8 extends Executor<Long> {
         return possibleMoves.keySet()
                 .stream()
                 .filter(m -> m.endsWith(start))
-                .mapToLong(pos -> {
-                    var steps = 0;
-                    while (true) {
-                        if (pos.endsWith(end)) {
-                            return steps;
-                        }
-
-                        pos = moves[steps++ % moves.length] == 'L'
-                                ? possibleMoves.get(pos).left()
-                                : possibleMoves.get(pos).right();
-                    }
-                })
-                .reduce((left, right) -> {
-                    var gcd = Math.abs(left);
-                    var temp = Math.abs(right);
-                    while (temp != 0) {
-                        var t = temp;
-                        temp = gcd % temp;
-                        gcd = t;
-                    }
-                    return Math.abs(left * right) / gcd;
-                })
+                .mapToLong(pos -> solve(possibleMoves, moves, pos, end))
+                .reduce(Algo::lcm)
                 .orElseThrow();
+    }
+
+    /**
+     * This method navigates the network from the start node to the end node.
+     * It uses the directions array to decide whether to move left or right at each step.
+     */
+    private long solve(Map<String, PossibleMove> moves, char[] directions, String start, String end) {
+        var steps = 0;
+        while (!start.endsWith(end)) {
+            start = directions[steps++ % directions.length] == 'L'
+                    ? moves.get(start).left()
+                    : moves.get(start).right();
+        }
+        return steps;
     }
 
     /**
