@@ -36,4 +36,20 @@ public record Point(int x, int y) {
                 this.translate(-1, 0),
                 this.translate(1, 0));
     }
+
+    public Point left() {
+        return this.translate(-1, 0);
+    }
+
+    public Point right() {
+        return this.translate(1, 0);
+    }
+
+    public Point up() {
+        return this.translate(0, - 1);
+    }
+
+    public Point down() {
+        return this.translate(0, 1);
+    }
 }
