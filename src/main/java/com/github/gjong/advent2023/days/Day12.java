@@ -3,6 +3,7 @@ package com.github.gjong.advent2023.days;
 import com.jongsoft.lang.API;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,20 +22,13 @@ public class Day12 extends Executor<Long> {
     public Long solvePart2(String input) {
         return input.lines()
                 .map(s -> s.split("\\s"))
-                .map(s -> API.Tuple(repeat(s[0], '?'), repeat(s[1], ',')))
+                .map(s -> API.Tuple(repeat(s[0], "?"), repeat(s[1], ",")))
                 .mapToLong(s -> compute(s.getFirst() + ".", parseRuns(s.getSecond())))
                 .sum();
     }
 
-    private String repeat(String input, char joining) {
-        StringBuilder sb = new StringBuilder();
-        for (var i = 0; i < 5; i++) {
-            sb.append(input);
-            if (i < 5 - 1) {
-                sb.append(joining);
-            }
-        }
-        return sb.toString();
+    private String repeat(String input, String joining) {
+        return String.join(joining, Collections.nCopies(5, input));
     }
 
     public static void main(String[] args) {
