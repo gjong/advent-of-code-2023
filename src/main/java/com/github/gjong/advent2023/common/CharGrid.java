@@ -14,6 +14,10 @@ public class CharGrid {
                 .toArray(char[][]::new);
     }
 
+    public char at(int x, int y) {
+        return grid[y][x];
+    }
+
     public int rows() {
         return grid.length;
     }
