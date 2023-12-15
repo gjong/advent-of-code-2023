@@ -29,3 +29,5 @@ This repository contains solutions designed in Java to solve the puzzles of AoC.
 | 11  | [Day11](src/main/java/com/github/gjong/advent2023/days/Day11.java) | >24h          | 20ms           | >24h          | 4ms            |
 | 12  | [Day12](src/main/java/com/github/gjong/advent2023/days/Day12.java) | 07:18:33      | 16ms           | 07:34:33      | 88ms           |
 | 13  | [Day13](src/main/java/com/github/gjong/advent2023/days/Day13.java) | 04:08:15      | 5ms            | 04:12:34      | 2ms            |
+| 14  | [Day14](src/main/java/com/github/gjong/advent2023/days/Day14.java) | 04:39:27      | 27ms           | >24h          | 1848ms         |
+| 15  | [Day15](src/main/java/com/github/gjong/advent2023/days/Day15.java) | 05:48:12      | 1ms            | 06:20:07      | 6ms            |
