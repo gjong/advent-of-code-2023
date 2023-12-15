@@ -8,10 +8,26 @@ public class CharGrid {
         this.grid = grid;
     }
 
+    public CharGrid(int rows, int cols) {
+        this.grid = new char[rows][cols];
+    }
+
     public CharGrid(String input) {
         this.grid = input.lines()
                 .map(String::toCharArray)
                 .toArray(char[][]::new);
+    }
+
+    public String print() {
+        var sb = new StringBuilder();
+        for (var row : grid) {
+            sb.append(row).append("\n");
+        }
+        return sb.toString();
+    }
+
+    public void set(int x, int y, char c) {
+        grid[y][x] = c;
     }
 
     public char at(int x, int y) {
