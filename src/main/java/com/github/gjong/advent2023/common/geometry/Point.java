@@ -23,6 +23,26 @@ public record Point(int x, int y) {
         return new Point(x, y);
     }
 
+    public boolean isLeft() {
+        return this.x < 0;
+    }
+
+    public boolean isHorizontal() {
+        return isLeft() || isRight();
+    }
+
+    public boolean isRight() {
+        return this.x > 0;
+    }
+
+    public boolean isUp() {
+        return this.y < 0;
+    }
+
+    public boolean isDown() {
+        return this.y > 0;
+    }
+
     /**
      * Build the list of neighbours, this includes all points except the diagonal points that touch
      * this point.
@@ -51,5 +71,13 @@ public record Point(int x, int y) {
 
     public Point down() {
         return this.translate(0, 1);
+    }
+
+    /**
+     * Return the inverse of this point. This is the point with the same magnitude but opposite
+     * direction.
+     */
+    public Point inverse() {
+        return new Point(-x, -y);
     }
 }

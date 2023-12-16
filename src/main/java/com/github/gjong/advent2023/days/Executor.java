@@ -18,21 +18,39 @@ public abstract class Executor<T> {
      *
      * @param day The day to execute the solution for.
      */
-    public void execute(int day) {
+    public Executor<T> execute(int day) {
         var input = readInputData("/day" + day + "/input.txt");
 
-        execute(1, () -> solvePart1(input));
-        execute(2, () -> solvePart2(input));
+        execute(day, 1, () -> solvePart1(input));
+        execute(day, 2, () -> solvePart2(input));
+        return this;
     }
 
-    private void execute(int part, Supplier<T> runnable) {
+    private void execute(int day, int part, Supplier<T> runnable) {
         var start = Instant.now();
         var result = runnable.get();
         var end = Instant.now();
-        logger.info("Part {}: {} ({}ms)",
+
+        var correct = assertIfSolution(day, part, result);
+        logger.info(
+                "Part {}: {} ({}ms). - {}",
                 part,
                 result,
-                Duration.between(start, end).toMillis());
+                Duration.between(start, end).toMillis(),
+                correct ? "[GOOD]" : "[BAD]");
+    }
+
+    private boolean assertIfSolution(int day, int part, T solution) {
+        try (var resource = Executor.class.getResourceAsStream("/day" + day + "/part"+ part +".txt")) {
+            if (resource == null) {
+                return false;
+            }
+
+            var expected = Long.parseLong(new String(resource.readAllBytes()));
+            return solution.equals(expected);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not open solution file.", e);
+        }
     }
 
     /**

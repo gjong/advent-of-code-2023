@@ -1,5 +1,7 @@
 package com.github.gjong.advent2023.common;
 
+import com.github.gjong.advent2023.common.geometry.Bounds;
+
 public class CharGrid {
 
     private final char[][] grid;
@@ -57,5 +59,9 @@ public class CharGrid {
             }
         }
         return new CharGrid(rotated);
+    }
+
+    public Bounds bounds() {
+        return new Bounds(0, 0, cols() - 1, rows() - 1);
     }
 }
