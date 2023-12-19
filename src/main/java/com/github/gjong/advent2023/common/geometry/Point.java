@@ -12,6 +12,14 @@ public record Point(int x, int y) {
         return Point.of(this.x + x, this.y + y);
     }
 
+    public Point rotateCW() {
+        return new Point(-y, x);
+    }
+
+    public Point rotateCCW() {
+        return new Point(y, -x);
+    }
+
     public boolean touches(Point other) {
         return (x >= (other.x - 1) && x <= (other.x + 1))
                 && (y >= (other.y - 1) && y <= (other.y + 1));
@@ -79,5 +87,16 @@ public record Point(int x, int y) {
      */
     public Point inverse() {
         return new Point(-x, -y);
+    }
+
+    public static Point directionFromChar(char c) {
+        if (c == 'U' || c == 'N') { // Up, North
+            return zero.up();
+        } else if (c == 'D' || c == 'S') {// Down, South
+            return zero.down();
+        } else if (c == 'R' || c == 'E') { // Right, East
+            return zero.right();
+        }
+        return zero.left();
     }
 }

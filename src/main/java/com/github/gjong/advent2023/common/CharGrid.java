@@ -1,6 +1,7 @@
 package com.github.gjong.advent2023.common;
 
 import com.github.gjong.advent2023.common.geometry.Bounds;
+import com.github.gjong.advent2023.common.geometry.Point;
 
 public class CharGrid {
 
@@ -34,6 +35,10 @@ public class CharGrid {
 
     public char at(int x, int y) {
         return grid[y][x];
+    }
+
+    public char at(Point p) {
+        return at(p.x(), p.y());
     }
 
     public int rows() {
